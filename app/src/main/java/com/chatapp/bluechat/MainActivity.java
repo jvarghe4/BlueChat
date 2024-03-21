@@ -111,13 +111,6 @@ public class    MainActivity extends AppCompatActivity {
             finish();
         }
 
-//        //show bluetooth devices dialog when click connect button
-//        btnConnect.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                showPrinterPickDialog();
-//            }
-//        });
 
         //set chat adapter
         chatMessages = new ArrayList<>();
