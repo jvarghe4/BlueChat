@@ -33,7 +33,7 @@ import java.util.UUID;
 public class ChatController {
     private static final String APP_NAME = "BlueChat";
     private static final UUID MY_UUID = UUID.fromString("8ce255c0-200a-11e0-ac64-0800200c9a66");
-    public static int STATE_DISCONNECTED = 1;
+
 
     private final BluetoothAdapter bluetoothAdapter;
     private final Handler handler;
@@ -41,13 +41,11 @@ public class ChatController {
     private ConnectThread connectThread;
     private ReadWriteThread connectedThread;
     private int state;
-
+    static final int STATE_DISCONNECTED = 4;
     static final int STATE_NONE = 0;
     static final int STATE_LISTEN = 1;
     static final int STATE_CONNECTING = 2;
     static final int STATE_CONNECTED = 3;
-
-    static final int STATE_DISCONNECT = 4;
 
     public ChatController(Context context, Handler handler) {
         bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
@@ -56,14 +54,6 @@ public class ChatController {
         this.handler = handler;
     }
 
-    public synchronized void DISCONNECTDEVICE() {
-        // Cancel any thread
-            connectThread.cancel();
-            connectThread = null;
-
-            state = STATE_DISCONNECTED;
-
-    }
 
     // Set the current state of the chat connection
     private synchronized void setState(int state) {

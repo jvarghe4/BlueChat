@@ -24,6 +24,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
@@ -65,22 +67,7 @@ public class    MainActivity extends AppCompatActivity {
     private BluetoothDevice connectingDevice;
     private ArrayAdapter<String> discoveredDevicesAdapter;
 
-    @SuppressLint("SetTextI18n")
-    public void setConnectButtonState(int state) {
-        if (state == ChatController.STATE_CONNECTED) {
-            btnConnect.setText("Disconnect");
-            btnConnect.setEnabled(true);
-        } else if (state == ChatController.STATE_NONE) {
-            btnConnect.setText("Connect");
-            btnConnect.setEnabled(true);
-        } else if (state == ChatController.STATE_CONNECTING) {
-            btnConnect.setText("Connecting");
-            btnConnect.setEnabled(false);
-        } else if (state == ChatController.STATE_DISCONNECTED) {
-            btnConnect.setText("Connect");
-            btnConnect.setEnabled(true);
-        }
-    }
+
 
 
     public void disconnect() {
@@ -263,6 +250,7 @@ public class    MainActivity extends AppCompatActivity {
         //Handling listview item click event
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
+            @SuppressLint("SetTextI18n")
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
@@ -281,9 +269,8 @@ public class    MainActivity extends AppCompatActivity {
                 String info = ((TextView) view).getText().toString();
                 String address = info.substring(info.length() - 17);
 
-                // Change the button text to "Connecting..."
-                btnConnect.setText("Connecting..");
-                btnConnect.setEnabled(false);
+
+
 
                 connectToDevice(address);
                 dialog.dismiss();
@@ -293,33 +280,35 @@ public class    MainActivity extends AppCompatActivity {
 
         });
 
-//        listView2.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-//            @Override
-//            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-//
-//
-//                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S && checkPermission(Manifest.permission.BLUETOOTH_SCAN)) {
-//                    // Permission is granted. Start scanning for Bluetooth devices.
-//                    // You can start scanning here.
-//                } else {
-//                    // Permission is not granted. Request the permission.
-//                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-//                        requestPermission(Manifest.permission.BLUETOOTH_SCAN, REQUEST_CODE_BLUETOOTH);
-//                    }
-//                }
-//
-//                bluetoothAdapter.cancelDiscovery();
-//
-//                String info = ((TextView) view).getText().toString();
-//                String address = info.substring(info.length() - 17);
-//
-//
-//
-//
-//                connectToDevice(address);
-//                dialog.dismiss();
-//            }
-//        });
+        listView2.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+
+
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S && checkPermission(Manifest.permission.BLUETOOTH_SCAN)) {
+                    // Permission is granted. Start scanning for Bluetooth devices.
+                    // You can start scanning here.
+                } else {
+                    // Permission is not granted. Request the permission.
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+                        requestPermission(Manifest.permission.BLUETOOTH_SCAN, REQUEST_CODE_BLUETOOTH);
+                    }
+                }
+
+                bluetoothAdapter.cancelDiscovery();
+
+                String info = ((TextView) view).getText().toString();
+                String address = info.substring(info.length() - 17);
+
+
+
+
+
+                connectToDevice(address);
+                dialog.dismiss();
+            }
+        });
+
 
         dialog.findViewById(R.id.cancelButton).setOnClickListener(new View.OnClickListener() {
 
@@ -333,6 +322,9 @@ public class    MainActivity extends AppCompatActivity {
     }
 
     private void setStatus(String s) {
+
+        // Change the button text to "Connecting..."
+        setConnectButtonState(chatController.getState());
         status.setText(s);
     }
 
@@ -434,10 +426,18 @@ public class    MainActivity extends AppCompatActivity {
 
         if (!bluetoothAdapter.isEnabled()) {
             Intent enableIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
-            startActivityForResult(enableIntent, REQUEST_ENABLE_BLUETOOTH);
+            ActivityResultLauncher<Intent> enableBluetoothLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
+                if (result.getResultCode() == Activity.RESULT_OK) {
+                    chatController = new ChatController(this, handler);
+                } else {
+                    Toast.makeText(this, "Bluetooth activation denied", Toast.LENGTH_SHORT).show();
+                }
+            });
+            enableBluetoothLauncher.launch(enableIntent);
         } else {
             chatController = new ChatController(this, handler);
         }
+
     }
 
     @Override
@@ -522,6 +522,26 @@ public class    MainActivity extends AppCompatActivity {
 
 
 
+    @SuppressLint("SetTextI18n")
+    public void setConnectButtonState(int state) {
+        if (state == ChatController.STATE_CONNECTED) {
+            btnConnect.setText("Disconnect");
+            btnConnect.setEnabled(true);
+        } else if (state == ChatController.STATE_NONE) {
+            btnConnect.setText("Connect");
+            btnConnect.setEnabled(true);
+        } else if (state == ChatController.STATE_CONNECTING) {
+            btnConnect.setText("Connecting...");
+            btnConnect.setEnabled(false);
+        } else if (state == ChatController.STATE_DISCONNECTED) {
+            btnConnect.setText("Connect");
+            btnConnect.setEnabled(true);
+        } else {
+            // Default case: If none of the predefined states match
+            btnConnect.setText("Connect to a device");
+            btnConnect.setEnabled(true);
+        }
+    }
 
 
 }
