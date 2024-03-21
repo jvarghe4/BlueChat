@@ -20,6 +20,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
+import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -70,13 +71,7 @@ public class    MainActivity extends AppCompatActivity {
 
 
 
-    public void disconnect() {
-        if (chatController.getState() == ChatController.STATE_CONNECTED) {
-            chatController.disconnectDevice();
-            setStatus("Disconnected");
-            btnConnect.setText("Connect");
-        }
-    }
+
 
 
     @Override
@@ -299,9 +294,6 @@ public class    MainActivity extends AppCompatActivity {
 
                 String info = ((TextView) view).getText().toString();
                 String address = info.substring(info.length() - 17);
-
-
-
 
 
                 connectToDevice(address);
@@ -541,6 +533,22 @@ public class    MainActivity extends AppCompatActivity {
             btnConnect.setText("Connect to a device");
             btnConnect.setEnabled(true);
         }
+    }
+
+
+    public void disconnect() {
+        if (chatController.getState() == ChatController.STATE_CONNECTED) {
+            chatController.disconnectDevice();
+            setStatus("Disconnected");
+            btnConnect.setText("Connect");
+            clearChat();
+        }
+    }
+
+    //used to clear chat messages after disconnecting from a device
+    private void clearChat() {
+        chatMessages.clear();
+        chatAdapter.notifyDataSetChanged();
     }
 
 
