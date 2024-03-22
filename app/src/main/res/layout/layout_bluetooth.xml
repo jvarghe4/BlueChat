@@ -22,16 +22,12 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Discovered Devices"
-        android:visibility="visible"
-        tools:visibility="visible" />
+        android:text="Discovered Devices" />
 
     <ListView
         android:id="@+id/discoveredDeviceList"
         android:layout_width="match_parent"
-        android:layout_height="320dp"
-        android:visibility="visible"
-        tools:visibility="visible" />
+        android:layout_height="320dp" />
 
     <Button
         android:id="@+id/cancelButton"
