@@ -11,12 +11,10 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
-import android.graphics.Typeface;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.util.TypedValue;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -41,14 +39,13 @@ import androidx.core.view.WindowInsetsCompat;
 import com.google.android.material.textfield.TextInputLayout;
 
 import java.util.ArrayList;
-import java.util.Objects;
 import java.util.Set;
 
 public class    MainActivity extends AppCompatActivity {
 
 
     @SuppressLint("ResourceAsColor")
-    public static final int REQUEST_CODE_BLUETOOTH = 1001;
+    private static final int REQUEST_CODE_BLUETOOTH = 1001;
     private TextView status;
     private Button btnConnect;
 
@@ -58,7 +55,6 @@ public class    MainActivity extends AppCompatActivity {
     private ArrayAdapter<String> chatAdapter;
     private ArrayList<String> chatMessages;
     private BluetoothAdapter bluetoothAdapter;
-
 
     public static final int MESSAGE_STATE_CHANGE = 1;
     public static final int MESSAGE_READ = 2;
@@ -73,6 +69,11 @@ public class    MainActivity extends AppCompatActivity {
     private ArrayAdapter<String> discoveredDevicesAdapter;
 
 
+
+
+
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -82,6 +83,7 @@ public class    MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         findViewsByIds();
+
 
 
         //check device support bluetooth or not
@@ -101,7 +103,7 @@ public class    MainActivity extends AppCompatActivity {
     private Handler handler = new Handler(new Handler.Callback() {
 
         @Override
-        public boolean handleMessage(@NonNull Message msg) {
+        public boolean handleMessage(Message msg) {
 
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S && checkPermission(android.Manifest.permission.BLUETOOTH_CONNECT)) {
                 // Permission is granted. Start scanning for Bluetooth devices.
@@ -131,6 +133,7 @@ public class    MainActivity extends AppCompatActivity {
                             btnConnect.setEnabled(true);
                             setStatus("Not connected");
                             break;
+
 
 
                     }
@@ -166,17 +169,13 @@ public class    MainActivity extends AppCompatActivity {
 
     private void showPrinterPickDialog() {
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S && checkPermission(Manifest.permission.BLUETOOTH_SCAN) &&
-                checkPermission(Manifest.permission.BLUETOOTH_CONNECT) &&
-                checkPermission(Manifest.permission.BLUETOOTH_ADVERTISE)) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S && checkPermission(android.Manifest.permission.BLUETOOTH_SCAN)) {
             // Permission is granted. Start scanning for Bluetooth devices.
             // You can start scanning here.
         } else {
             // Permission is not granted. Request the permission.
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-                requestPermission(Manifest.permission.BLUETOOTH_SCAN, REQUEST_CODE_BLUETOOTH);
-                requestPermission(Manifest.permission.BLUETOOTH_CONNECT, REQUEST_CODE_BLUETOOTH);
-                requestPermission(Manifest.permission.BLUETOOTH_ADVERTISE, REQUEST_CODE_BLUETOOTH);
+                requestPermission(android.Manifest.permission.BLUETOOTH_SCAN, REQUEST_CODE_BLUETOOTH);
             }
         }
 
@@ -189,23 +188,19 @@ public class    MainActivity extends AppCompatActivity {
         }
         bluetoothAdapter.startDiscovery();
 
-
         //Initializing bluetooth adapters
         ArrayAdapter<String> pairedDevicesAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1);
-        ArrayAdapter<String> discoveredDevicesAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1);
+        discoveredDevicesAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1);
 
-
-        //locate listviews and attach the adapters
+        //locate listviews and attatch the adapters
         ListView listView = (ListView) dialog.findViewById(R.id.pairedDeviceList);
         ListView listView2 = (ListView) dialog.findViewById(R.id.discoveredDeviceList);
         listView.setAdapter(pairedDevicesAdapter);
         listView2.setAdapter(discoveredDevicesAdapter);
 
-
         // Register for broadcasts when a device is discovered
         IntentFilter filter = new IntentFilter(BluetoothDevice.ACTION_FOUND);
         registerReceiver(discoveryFinishReceiver, filter);
-
 
         // Register for broadcasts when discovery has finished
         filter = new IntentFilter(BluetoothAdapter.ACTION_DISCOVERY_FINISHED);
@@ -226,7 +221,7 @@ public class    MainActivity extends AppCompatActivity {
         Set<BluetoothDevice> pairedDevices = bluetoothAdapter.getBondedDevices();
 
         // If there are paired devices, add each one to the ArrayAdapter
-        if (!pairedDevices.isEmpty()) {
+        if (pairedDevices.size() > 0) {
 
 
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S && checkPermission(android.Manifest.permission.BLUETOOTH_CONNECT)) {
@@ -270,6 +265,8 @@ public class    MainActivity extends AppCompatActivity {
                 String address = info.substring(info.length() - 17);
 
 
+
+
                 connectToDevice(address);
                 dialog.dismiss();
 
@@ -277,8 +274,6 @@ public class    MainActivity extends AppCompatActivity {
             }
 
         });
-
-
 
         listView2.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -355,7 +350,7 @@ public class    MainActivity extends AppCompatActivity {
         btnSend.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (Objects.requireNonNull(inputLayout.getEditText()).getText().toString().isEmpty()) {
+                if (inputLayout.getEditText().getText().toString().equals("")) {
                     Toast.makeText(MainActivity.this, "Please input some texts", Toast.LENGTH_SHORT).show();
                 } else {
                     //TODO: here
@@ -371,7 +366,7 @@ public class    MainActivity extends AppCompatActivity {
             public void onClick(View view) {
                 if (chatController.getState() == ChatController.STATE_CONNECTED) {
                     disconnect();
-                } else {
+                }else {
                     // If not connected, show printer pick dialog to connect
                     showPrinterPickDialog();
                 }
@@ -409,6 +404,7 @@ public class    MainActivity extends AppCompatActivity {
         super.onStart();
 
 
+
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S && checkPermission(android.Manifest.permission.BLUETOOTH_CONNECT)) {
             // Permission is granted. Start scanning for Bluetooth devices.
             // You can start scanning here.
@@ -420,23 +416,16 @@ public class    MainActivity extends AppCompatActivity {
             }
         }
 
-//        if (!bluetoothAdapter.isEnabled()) {
-//            Intent enableIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
-//            ActivityResultLauncher<Intent> enableBluetoothLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
-//                if (result.getResultCode() == Activity.RESULT_OK) {
-//                    chatController = new ChatController(this, handler);
-//                } else {
-//                    Toast.makeText(this, "Bluetooth activation denied", Toast.LENGTH_SHORT).show();
-//                }
-//            });
-//            enableBluetoothLauncher.launch(enableIntent);
-//        } else {
-//            chatController = new ChatController(this, handler);
-//        }
-
         if (!bluetoothAdapter.isEnabled()) {
             Intent enableIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
-            startActivityForResult(enableIntent, REQUEST_ENABLE_BLUETOOTH);
+            ActivityResultLauncher<Intent> enableBluetoothLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
+                if (result.getResultCode() == Activity.RESULT_OK) {
+                    chatController = new ChatController(this, handler);
+                } else {
+                    Toast.makeText(this, "Bluetooth activation denied", Toast.LENGTH_SHORT).show();
+                }
+            });
+            enableBluetoothLauncher.launch(enableIntent);
         } else {
             chatController = new ChatController(this, handler);
         }
@@ -459,7 +448,6 @@ public class    MainActivity extends AppCompatActivity {
         super.onDestroy();
         if (chatController != null)
             chatController.stop();
-
     }
 
     private final BroadcastReceiver discoveryFinishReceiver = new BroadcastReceiver() {
@@ -480,7 +468,6 @@ public class    MainActivity extends AppCompatActivity {
 
             if (BluetoothDevice.ACTION_FOUND.equals(action)) {
                 BluetoothDevice device = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
-                assert device != null;
                 if (device.getBondState() != BluetoothDevice.BOND_BONDED) {
                     discoveredDevicesAdapter.add(device.getName() + "\n" + device.getAddress());
                 }
@@ -491,6 +478,8 @@ public class    MainActivity extends AppCompatActivity {
             }
         }
     };
+
+
 
 
     @RequiresApi(api = Build.VERSION_CODES.S)
@@ -533,20 +522,16 @@ public class    MainActivity extends AppCompatActivity {
         } else if (state == ChatController.STATE_NONE) {
             btnConnect.setText("Connect");
             btnConnect.setEnabled(true);
-            clearChat();
         } else if (state == ChatController.STATE_CONNECTING) {
             btnConnect.setText("Connecting...");
             btnConnect.setEnabled(false);
         } else if (state == ChatController.STATE_DISCONNECTED) {
             btnConnect.setText("Connect");
             btnConnect.setEnabled(true);
-            chatMessages.clear();
-            clearChat();
         } else {
             // Default case: If none of the predefined states match
             btnConnect.setText("Connect to a device");
             btnConnect.setEnabled(true);
-            clearChat();
         }
     }
 
@@ -556,7 +541,7 @@ public class    MainActivity extends AppCompatActivity {
             chatController.disconnectDevice();
             setStatus("Disconnected");
             btnConnect.setText("Connect");
-
+            clearChat();
         }
     }
 
