@@ -16,8 +16,6 @@
 
 package com.chatapp.bluechat;
 
-import static com.chatapp.bluechat.MainActivity.REQUEST_CODE_BLUETOOTH;
-
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothServerSocket;
