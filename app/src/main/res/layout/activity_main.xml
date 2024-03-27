@@ -9,8 +9,8 @@
     tools:context="com.chatapp.bluechat.MainActivity">
 
     <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
+        android:layout_width="377dp"
+        android:layout_height="16dp"
         android:layout_weight="0.2"
         android:orientation="vertical">
 
@@ -35,6 +35,7 @@
         android:layout_height="0dp"
         android:layout_weight="0.7"
         android:background="#00FFFFFF" />
+
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -65,8 +66,6 @@
             android:visibility="visible"
             tools:visibility="visible" />
     </LinearLayout>
-
-
 
 
 

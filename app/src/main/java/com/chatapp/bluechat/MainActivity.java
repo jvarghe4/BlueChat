@@ -11,10 +11,12 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
+import android.graphics.Typeface;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.util.TypedValue;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -46,7 +48,7 @@ public class    MainActivity extends AppCompatActivity {
 
 
     @SuppressLint("ResourceAsColor")
-    private static final int REQUEST_CODE_BLUETOOTH = 1001;
+    public static final int REQUEST_CODE_BLUETOOTH = 1001;
     private TextView status;
     private Button btnConnect;
 
@@ -56,6 +58,7 @@ public class    MainActivity extends AppCompatActivity {
     private ArrayAdapter<String> chatAdapter;
     private ArrayList<String> chatMessages;
     private BluetoothAdapter bluetoothAdapter;
+
 
     public static final int MESSAGE_STATE_CHANGE = 1;
     public static final int MESSAGE_READ = 2;
@@ -70,13 +73,6 @@ public class    MainActivity extends AppCompatActivity {
     private ArrayAdapter<String> discoveredDevicesAdapter;
 
 
-
-
-
-
-
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -86,12 +82,6 @@ public class    MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         findViewsByIds();
-
-
-
-
-
-
 
 
         //check device support bluetooth or not
@@ -141,7 +131,6 @@ public class    MainActivity extends AppCompatActivity {
                             btnConnect.setEnabled(true);
                             setStatus("Not connected");
                             break;
-
 
 
                     }
@@ -201,13 +190,9 @@ public class    MainActivity extends AppCompatActivity {
         bluetoothAdapter.startDiscovery();
 
 
-
-
         //Initializing bluetooth adapters
         ArrayAdapter<String> pairedDevicesAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1);
         ArrayAdapter<String> discoveredDevicesAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1);
-
-
 
 
         //locate listviews and attach the adapters
@@ -217,11 +202,9 @@ public class    MainActivity extends AppCompatActivity {
         listView2.setAdapter(discoveredDevicesAdapter);
 
 
-
         // Register for broadcasts when a device is discovered
         IntentFilter filter = new IntentFilter(BluetoothDevice.ACTION_FOUND);
         registerReceiver(discoveryFinishReceiver, filter);
-
 
 
         // Register for broadcasts when discovery has finished
@@ -295,6 +278,8 @@ public class    MainActivity extends AppCompatActivity {
 
         });
 
+
+
         listView2.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
@@ -367,7 +352,6 @@ public class    MainActivity extends AppCompatActivity {
         View btnSend = findViewById(R.id.btn_send);
 
 
-
         btnSend.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -387,7 +371,7 @@ public class    MainActivity extends AppCompatActivity {
             public void onClick(View view) {
                 if (chatController.getState() == ChatController.STATE_CONNECTED) {
                     disconnect();
-                }else {
+                } else {
                     // If not connected, show printer pick dialog to connect
                     showPrinterPickDialog();
                 }
@@ -423,7 +407,6 @@ public class    MainActivity extends AppCompatActivity {
     @Override
     public void onStart() {
         super.onStart();
-
 
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S && checkPermission(android.Manifest.permission.BLUETOOTH_CONNECT)) {
@@ -508,8 +491,6 @@ public class    MainActivity extends AppCompatActivity {
             }
         }
     };
-
-
 
 
     @RequiresApi(api = Build.VERSION_CODES.S)
