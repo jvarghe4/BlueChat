@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#FFFFFF"
+    android:background="@drawable/background_bluetooth_layout"
     android:orientation="vertical"
     android:overScrollMode="always"
     android:visibility="visible"
@@ -14,32 +14,42 @@
         android:layout_height="wrap_content"
         android:textStyle="bold"
         android:textSize="17dp"
+        android:textColor="@color/secondary_text"
         android:textAlignment="center"
         android:text="Paired Devices" />
 
     <ListView
         android:id="@+id/pairedDeviceList"
         android:layout_width="match_parent"
-        android:layout_height="325dp" />
+        android:layout_height="325dp"
+        android:background="@drawable/background_devices_list"/>
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textStyle="bold"
         android:textSize="17dp"
+        android:textColor="@color/secondary_text"
         android:textAlignment="center"
         android:text="Discovered Devices" />
 
     <ListView
         android:id="@+id/discoveredDeviceList"
         android:layout_width="match_parent"
-        android:layout_height="320dp" />
+        android:layout_height="310dp"
+        android:background="@drawable/background_devices_list"
+        />
 
     <Button
         android:id="@+id/cancelButton"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_width="343dp"
+        android:layout_height="45dp"
+        android:layout_gravity="center"
+        android:layout_marginTop="9dp"
+        android:layout_marginBottom="6dp"
+        android:background="@drawable/background_connect_button"
         android:text="Cancel"
+        android:textColor="@color/white"
         android:visibility="visible"
         tools:visibility="visible" />
 
