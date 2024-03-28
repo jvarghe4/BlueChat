@@ -19,6 +19,7 @@
     import android.widget.AdapterView;
     import android.widget.ArrayAdapter;
     import android.widget.Button;
+    import android.widget.EditText;
     import android.widget.ListView;
     import android.widget.ScrollView;
     import android.widget.TextView;
@@ -51,7 +52,7 @@
 
         private ListView listView;
         private Dialog dialog;
-        private TextInputLayout inputLayout;
+        private EditText inputLayout;
         private ArrayAdapter<String> chatAdapter;
         private ArrayList<String> chatMessages;
         private BluetoothAdapter bluetoothAdapter;
@@ -122,16 +123,20 @@
                                 setStatus("Connected to: " + connectingDevice.getName());
                                 btnConnect.setEnabled(false);
                                 setConnectButtonState(chatController.getState());
+                                btnConnect.setBackgroundResource(R.drawable.background_connect_button_connected);
                                 break;
                             case ChatController.STATE_CONNECTING:
                                 setStatus("Connecting...");
                                 btnConnect.setEnabled(false);
+                                btnConnect.setBackgroundResource(R.drawable.background_connect_button_grey);
                                 break;
                             case ChatController.STATE_LISTEN:
+                                btnConnect.setBackgroundResource(R.drawable.background_connect_button);
 
                             case ChatController.STATE_NONE:
                                 btnConnect.setEnabled(true);
                                 setStatus("Not connected");
+                                btnConnect.setBackgroundResource(R.drawable.background_connect_button);
                                 break;
 
 
@@ -343,19 +348,19 @@
             status = (TextView) findViewById(R.id.status);
             btnConnect = (Button) findViewById(R.id.btn_connect);
             listView = (ListView) findViewById(R.id.list);
-            inputLayout = (TextInputLayout) findViewById(R.id.input_layout);
+            inputLayout = (EditText) findViewById(R.id.input_layout);
             View btnSend = findViewById(R.id.btn_send);
 
 
             btnSend.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    if (inputLayout.getEditText().getText().toString().equals("")) {
+                    if (inputLayout.getText().toString().equals("")) {
                         Toast.makeText(MainActivity.this, "Please input some texts", Toast.LENGTH_SHORT).show();
                     } else {
                         //TODO: here
-                        sendMessage(inputLayout.getEditText().getText().toString());
-                        inputLayout.getEditText().setText("");
+                        sendMessage(inputLayout.getText().toString());
+                        inputLayout.setText("");
                     }
                 }
             });
@@ -519,15 +524,19 @@
             if (state == ChatController.STATE_CONNECTED) {
                 btnConnect.setText("Disconnect");
                 btnConnect.setEnabled(true);
+                btnConnect.setBackgroundResource(R.drawable.background_connect_button_connected);
+
             } else if (state == ChatController.STATE_NONE) {
                 btnConnect.setText("Connect");
                 btnConnect.setEnabled(true);
+                btnConnect.setBackgroundResource(R.drawable.background_connect_button);
             } else if (state == ChatController.STATE_CONNECTING) {
                 btnConnect.setText("Connecting...");
                 btnConnect.setEnabled(false);
             } else if (state == ChatController.STATE_DISCONNECTED) {
                 btnConnect.setText("Connect");
                 btnConnect.setEnabled(true);
+                btnConnect.setBackgroundResource(R.drawable.background_connect_button);
             } else {
                 // Default case: If none of the predefined states match
                 btnConnect.setText("Connect to a device");

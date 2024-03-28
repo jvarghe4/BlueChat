@@ -22,6 +22,7 @@
         android:id="@+id/pairedDeviceList"
         android:layout_width="match_parent"
         android:layout_height="325dp"
+        android:textColor="@color/white"
         android:background="@drawable/background_devices_list"/>
 
     <TextView
@@ -43,15 +44,13 @@
     <Button
         android:id="@+id/cancelButton"
         android:layout_width="343dp"
-        android:layout_height="45dp"
+        android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:layout_marginTop="9dp"
         android:layout_marginBottom="6dp"
         android:background="@drawable/background_connect_button"
         android:text="Cancel"
-        android:textColor="@color/white"
-        android:visibility="visible"
-        tools:visibility="visible" />
+        android:textColor="@color/white"/>
 
 
 </LinearLayout>
