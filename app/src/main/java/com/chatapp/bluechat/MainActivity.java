@@ -15,6 +15,7 @@
     import android.os.Bundle;
     import android.os.Handler;
     import android.os.Message;
+    import android.view.Gravity;
     import android.view.View;
     import android.widget.AdapterView;
     import android.widget.ArrayAdapter;
@@ -150,6 +151,7 @@
                         chatMessages.add("Me: " + writeMessage);
                         chatAdapter.notifyDataSetChanged();
                         break;
+
                     case MESSAGE_READ:
                         byte[] readBuf = (byte[]) msg.obj;
 
@@ -157,11 +159,13 @@
                         chatMessages.add(connectingDevice.getName() + ":  " + readMessage);
                         chatAdapter.notifyDataSetChanged();
                         break;
+
                     case MESSAGE_DEVICE_OBJECT:
                         connectingDevice = msg.getData().getParcelable(DEVICE_OBJECT);
                         Toast.makeText(getApplicationContext(), "Connected to " + connectingDevice.getName(),
                                 Toast.LENGTH_SHORT).show();
                         break;
+
                     case MESSAGE_TOAST:
                         Toast.makeText(getApplicationContext(), msg.getData().getString("toast"),
                                 Toast.LENGTH_SHORT).show();
