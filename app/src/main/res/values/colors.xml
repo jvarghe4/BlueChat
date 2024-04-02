@@ -10,4 +10,6 @@
     <color name="secondary_text">#C3C3C3</color>
     <color name="received_message_background">#021727</color>
     <color name="grey">#6F6A69</color>
+    <color name="chatTextColor">#E4F5F2</color>
+    <color name="transparent">#00F44336</color>
 </resources>

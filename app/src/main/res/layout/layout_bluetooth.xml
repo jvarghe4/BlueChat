@@ -1,56 +1,73 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@drawable/background_bluetooth_layout"
-    android:orientation="vertical"
-    android:overScrollMode="always"
-    android:visibility="visible"
-    tools:verticalScrollbarPosition="left">
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:background="@drawable/background_bluetooth_layout">
 
-    <TextView
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textStyle="bold"
-        android:textSize="17dp"
-        android:textColor="@color/secondary_text"
-        android:textAlignment="center"
-        android:text="Paired Devices" />
+        android:paddingTop="16dp"
+        android:paddingBottom="8dp"
+        android:paddingLeft="5dp"
+        android:paddingRight="5dp"
+        android:orientation="vertical">
 
-    <ListView
-        android:id="@+id/pairedDeviceList"
-        android:layout_width="match_parent"
-        android:layout_height="325dp"
-        android:textColor="@color/white"
-        android:background="@drawable/background_devices_list"/>
+        <TextView
+            android:id="@+id/pairedDevicesLabel"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textStyle="bold"
+            android:textSize="17sp"
+            android:textColor="@color/secondary_text"
+            android:textAlignment="center"
+            android:text="@string/paired_devices" />
 
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:textStyle="bold"
-        android:textSize="17dp"
-        android:textColor="@color/secondary_text"
-        android:textAlignment="center"
-        android:text="Discovered Devices" />
+        <ListView
+            android:id="@+id/pairedDeviceList"
+            android:layout_width="match_parent"
+            android:layout_height="310dp"
+            android:background="@drawable/background_devices_list"
+            android:divider="@color/transparent"
+            android:dividerHeight="16dp"
+            android:textColor="@color/white" />
 
-    <ListView
-        android:id="@+id/discoveredDeviceList"
-        android:layout_width="match_parent"
-        android:layout_height="310dp"
-        android:background="@drawable/background_devices_list"
+        <TextView
+            android:id="@+id/discoveredDevicesLabel"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textStyle="bold"
+            android:textSize="17sp"
+            android:textColor="@color/secondary_text"
+            android:textAlignment="center"
+            android:text="@string/discovered_devices" />
+
+        <ListView
+            android:id="@+id/discoveredDeviceList"
+            android:layout_width="match_parent"
+            android:layout_height="310dp"
+            android:background="@drawable/background_devices_list"
+            android:divider="@color/transparent"
+            android:dividerHeight="16dp"
         />
 
-    <Button
-        android:id="@+id/cancelButton"
-        android:layout_width="343dp"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:layout_marginTop="9dp"
-        android:layout_marginBottom="6dp"
-        android:background="@drawable/background_connect_button"
-        android:text="Cancel"
-        android:textColor="@color/white"/>
 
+        <Button
+            android:id="@+id/cancelButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:paddingRight="80dp"
+            android:paddingLeft="80dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="6dp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginBottom="0dp"
+            android:background="@drawable/background_connect_button"
+            android:text="@string/cancel"
+            android:textColor="@color/white" />
 
-</LinearLayout>
+    </LinearLayout>
+
+</RelativeLayout>

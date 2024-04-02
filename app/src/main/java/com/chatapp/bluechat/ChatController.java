@@ -16,6 +16,7 @@
 
 package com.chatapp.bluechat;
 
+import android.app.Service;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothServerSocket;
@@ -37,12 +38,15 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.UUID;
 
-public class ChatController {
+public class ChatController{
+
     private static final String APP_NAME = "BlueChat";
     private static final UUID MY_UUID = UUID.fromString("8ce255c0-200a-11e0-ac64-0800200c9a66");
 
 
     private final BluetoothAdapter bluetoothAdapter;
+
+
     private final Handler handler;
     private AcceptThread acceptThread;
     private ConnectThread connectThread;

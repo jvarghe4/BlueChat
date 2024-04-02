@@ -11,18 +11,17 @@
     import android.content.Intent;
     import android.content.IntentFilter;
     import android.content.pm.PackageManager;
+    import android.graphics.Color;
     import android.os.Build;
     import android.os.Bundle;
     import android.os.Handler;
     import android.os.Message;
-    import android.view.Gravity;
     import android.view.View;
     import android.widget.AdapterView;
     import android.widget.ArrayAdapter;
     import android.widget.Button;
     import android.widget.EditText;
     import android.widget.ListView;
-    import android.widget.ScrollView;
     import android.widget.TextView;
     import android.widget.Toast;
 
@@ -34,11 +33,6 @@
     import androidx.appcompat.app.AppCompatActivity;
     import androidx.core.app.ActivityCompat;
     import androidx.core.content.ContextCompat;
-    import androidx.core.graphics.Insets;
-    import androidx.core.view.ViewCompat;
-    import androidx.core.view.WindowInsetsCompat;
-
-    import com.google.android.material.textfield.TextInputLayout;
 
     import java.util.ArrayList;
     import java.util.Set;
@@ -98,7 +92,8 @@
 
             //set chat adapter
             chatMessages = new ArrayList<>();
-            chatAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, chatMessages);
+//            chatAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, chatMessages);
+            chatAdapter = new ArrayAdapter<>(getApplicationContext(),R.layout.text_color_chat, chatMessages);
             listView.setAdapter(chatAdapter);
         }
 
@@ -124,24 +119,24 @@
                                 setStatus("Connected to: " + connectingDevice.getName());
                                 btnConnect.setEnabled(false);
                                 setConnectButtonState(chatController.getState());
-                                btnConnect.setBackgroundResource(R.drawable.background_connect_button_connected);
+                                btnConnect.setBackgroundResource(R.drawable.background_connect_button_disconnect);
                                 break;
                             case ChatController.STATE_CONNECTING:
                                 setStatus("Connecting...");
                                 btnConnect.setEnabled(false);
                                 btnConnect.setBackgroundResource(R.drawable.background_connect_button_grey);
+                                clearChat();
                                 break;
                             case ChatController.STATE_LISTEN:
                                 btnConnect.setBackgroundResource(R.drawable.background_connect_button);
+                                clearChat();
 
                             case ChatController.STATE_NONE:
                                 btnConnect.setEnabled(true);
                                 setStatus("Not connected");
+                                clearChat();
                                 btnConnect.setBackgroundResource(R.drawable.background_connect_button);
                                 break;
-
-
-
                         }
                         break;
                     case MESSAGE_WRITE:
@@ -198,8 +193,9 @@
             bluetoothAdapter.startDiscovery();
 
             //Initializing bluetooth adapters
-            ArrayAdapter<String> pairedDevicesAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1);
-            discoveredDevicesAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1);
+//            ArrayAdapter<String> pairedDevicesAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1);
+            ArrayAdapter<String> pairedDevicesAdapter = new ArrayAdapter<>(getApplicationContext(),R.layout.text_color_white_common);
+            ArrayAdapter<String> discoveredDevicesAdapter = new ArrayAdapter<>(getApplicationContext(),R.layout.text_color_white_common);
 
             //locate listviews and attatch the adapters
             ListView listView = (ListView) dialog.findViewById(R.id.pairedDeviceList);
@@ -231,8 +227,6 @@
 
             // If there are paired devices, add each one to the ArrayAdapter
             if (pairedDevices.size() > 0) {
-
-
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S && checkPermission(android.Manifest.permission.BLUETOOTH_CONNECT)) {
                     // Permission is granted. Start scanning for Bluetooth devices.
                     // You can start scanning here.
@@ -245,6 +239,7 @@
 
                 for (BluetoothDevice device : pairedDevices) {
                     pairedDevicesAdapter.add(device.getName() + "\n" + device.getAddress());
+//                    pairedDevicesAdapter.add(device.getName() + "\n" );
                 }
             } else {
                 pairedDevicesAdapter.add(getString(R.string.none_paired));
@@ -351,15 +346,19 @@
         private void findViewsByIds() {
             status = (TextView) findViewById(R.id.status);
             btnConnect = (Button) findViewById(R.id.btn_connect);
+
             listView = (ListView) findViewById(R.id.list);
+
             inputLayout = (EditText) findViewById(R.id.input_layout);
+            inputLayout.setTextColor(Color.WHITE);
+
             View btnSend = findViewById(R.id.btn_send);
 
 
             btnSend.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    if (inputLayout.getText().toString().equals("")) {
+                    if (inputLayout.getText().toString().isEmpty()) {
                         Toast.makeText(MainActivity.this, "Please input some texts", Toast.LENGTH_SHORT).show();
                     } else {
                         //TODO: here
@@ -528,27 +527,32 @@
             if (state == ChatController.STATE_CONNECTED) {
                 btnConnect.setText("Disconnect");
                 btnConnect.setEnabled(true);
-                btnConnect.setBackgroundResource(R.drawable.background_connect_button_connected);
+                btnConnect.setBackgroundResource(R.drawable.background_connect_button_disconnect);
 
             } else if (state == ChatController.STATE_NONE) {
                 btnConnect.setText("Connect");
                 btnConnect.setEnabled(true);
                 btnConnect.setBackgroundResource(R.drawable.background_connect_button);
+                clearChat();
             } else if (state == ChatController.STATE_CONNECTING) {
                 btnConnect.setText("Connecting...");
                 btnConnect.setEnabled(false);
+                clearChat();
             } else if (state == ChatController.STATE_DISCONNECTED) {
                 btnConnect.setText("Connect");
                 btnConnect.setEnabled(true);
+                clearChat();
                 btnConnect.setBackgroundResource(R.drawable.background_connect_button);
             } else {
                 // Default case: If none of the predefined states match
                 btnConnect.setText("Connect to a device");
                 btnConnect.setEnabled(true);
+                clearChat();
             }
         }
 
 
+        @SuppressLint("SetTextI18n")
         public void disconnect() {
             if (chatController.getState() == ChatController.STATE_CONNECTED) {
                 chatController.disconnectDevice();

@@ -22,8 +22,9 @@
             android:background="@drawable/background_connect_button_grey"
             android:textColor="@color/white"
             android:layout_marginStart="30dp"
+            android:layout_marginTop="16dp"
             android:layout_marginEnd="30dp"
-            android:text="Connect" />
+            android:text="@string/connect" />
 
         <TextView
             android:id="@+id/status"
@@ -31,8 +32,7 @@
             android:layout_height="36dp"
             android:paddingTop="10dp"
             android:textColor="@color/secondary_text"
-            android:text="Not Connected"
-            android:layout_below="@id/btn_connect"/>
+            android:text="@string/not_connected" />
 
         <ListView
             android:id="@+id/list"
@@ -52,7 +52,7 @@
         android:orientation="horizontal"
         android:layout_alignParentBottom="true"
         android:layout_marginTop="0dp"
-        android:layout_marginBottom="10dp">
+        android:layout_marginBottom="16dp">
 
         <EditText
             android:id="@+id/input_layout"
