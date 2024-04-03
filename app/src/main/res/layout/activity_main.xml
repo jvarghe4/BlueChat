@@ -40,6 +40,8 @@
             android:layout_height="match_parent"
             android:layout_gravity="center"
             android:layout_marginBottom="0dp"
+            android:divider="@color/transparent"
+            android:dividerHeight="5dp"
             android:background="@drawable/background_content_top"
             android:textColor="@color/white" />
 

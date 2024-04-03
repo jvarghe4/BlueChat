@@ -4,7 +4,8 @@
     android:id="@+id/chatContentText"
     android:layout_width="match_parent"
     android:textColor="@color/chatTextColor"
-    android:textSize="18sp"
+    android:textSize="17sp"
+    android:paddingTop="16dp"
     android:paddingStart="16dp"
     android:layout_height="match_parent">
 
