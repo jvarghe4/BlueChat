@@ -7,9 +7,9 @@
     <color name="white">#FFFFFF</color>
     <color name="chatPrimary">#002542</color>
     <color name="chatLayoutDark">#0B2A42</color>
-    <color name="secondary_text">#C3C3C3</color>
+    <color name="secondary_text">#C0C8CD</color>
     <color name="received_message_background">#021727</color>
-    <color name="grey">#6F6A69</color>
+    <color name="grey">#AFC2CC</color>
     <color name="chatTextColor">#E4F5F2</color>
     <color name="transparent">#00F44336</color>
 </resources>
