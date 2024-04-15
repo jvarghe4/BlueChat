@@ -39,7 +39,6 @@
 
     public class    MainActivity extends AppCompatActivity {
 
-
         @SuppressLint("ResourceAsColor")
         private static final int REQUEST_CODE_BLUETOOTH = 1001;
         private TextView status;
@@ -65,11 +64,6 @@
         private ArrayAdapter<String> discoveredDevicesAdapter;
 
 
-
-
-
-
-
         @Override
         protected void onCreate(Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
@@ -79,8 +73,6 @@
             setContentView(R.layout.activity_main);
 
             findViewsByIds();
-
-
 
             //check device support bluetooth or not
             bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
@@ -104,7 +96,6 @@
 
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S && checkPermission(android.Manifest.permission.BLUETOOTH_CONNECT)) {
                     // Permission is granted. Start scanning for Bluetooth devices.
-                    // You can start scanning here.
                 } else {
                     // Permission is not granted. Request the permission.
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
@@ -140,18 +131,28 @@
                         }
                         break;
                     case MESSAGE_WRITE:
+
+                        // Retrieve byte array data from msg.obj and cast it to byte[] as writeBuf
                         byte[] writeBuf = (byte[]) msg.obj;
 
+                        // Convert the entire byte array writeBuf into a String
                         String writeMessage = new String(writeBuf);
                         chatMessages.add("Me: " + writeMessage);
+
+                        // refresh the UI to reflect the new data.
                         chatAdapter.notifyDataSetChanged();
                         break;
 
                     case MESSAGE_READ:
+
+                        // Retrieve byte array data from msg.obj and assign it to readBuf
                         byte[] readBuf = (byte[]) msg.obj;
 
+                        // Convert byte array readBuf to a String using msg.arg1 as the length starting from index 0
                         String readMessage = new String(readBuf, 0, msg.arg1);
                         chatMessages.add(connectingDevice.getName() + ":  " + readMessage);
+
+                        //refresh the UI to reflect the new data.
                         chatAdapter.notifyDataSetChanged();
                         break;
 
@@ -161,6 +162,7 @@
                                 Toast.LENGTH_SHORT).show();
                         break;
 
+                        //used to toast messages
                     case MESSAGE_TOAST:
                         Toast.makeText(getApplicationContext(), msg.getData().getString("toast"),
                                 Toast.LENGTH_SHORT).show();
@@ -175,7 +177,6 @@
 
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S && checkPermission(android.Manifest.permission.BLUETOOTH_SCAN)) {
                 // Permission is granted. Start scanning for Bluetooth devices.
-                // You can start scanning here.
             } else {
                 // Permission is not granted. Request the permission.
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
@@ -185,7 +186,7 @@
 
             dialog = new Dialog(this);
             dialog.setContentView(R.layout.layout_bluetooth);
-            dialog.setTitle("Bluetooth Devices");
+//            dialog.setTitle("Bluetooth Devices");
 
             if (bluetoothAdapter.isDiscovering()) {
                 bluetoothAdapter.cancelDiscovery();
@@ -214,7 +215,6 @@
             //check permission
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S && checkPermission(android.Manifest.permission.BLUETOOTH_CONNECT)) {
                 // Permission is granted. Start scanning for Bluetooth devices.
-                // You can start scanning here.
             } else {
                 // Permission is not granted. Request the permission.
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
@@ -222,14 +222,15 @@
                 }
             }
 
+            //bluetooth adapter to do the bluetooth functionalities
             bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
+            //get devices which is already paired to local device
             Set<BluetoothDevice> pairedDevices = bluetoothAdapter.getBondedDevices();
 
             // If there are paired devices, add each one to the ArrayAdapter
             if (pairedDevices.size() > 0) {
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S && checkPermission(android.Manifest.permission.BLUETOOTH_CONNECT)) {
                     // Permission is granted. Start scanning for Bluetooth devices.
-                    // You can start scanning here.
                 } else {
                     // Permission is not granted. Request the permission.
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
@@ -255,7 +256,6 @@
 
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S && checkPermission(android.Manifest.permission.BLUETOOTH_SCAN)) {
                         // Permission is granted. Start scanning for Bluetooth devices.
-                        // You can start scanning here.
                     } else {
                         // Permission is not granted. Request the permission.
                         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
@@ -267,9 +267,6 @@
 
                     String info = ((TextView) view).getText().toString();
                     String address = info.substring(info.length() - 17);
-
-
-
 
                     connectToDevice(address);
                     dialog.dismiss();
@@ -286,7 +283,6 @@
 
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S && checkPermission(Manifest.permission.BLUETOOTH_SCAN)) {
                         // Permission is granted. Start scanning for Bluetooth devices.
-                        // You can start scanning here.
                     } else {
                         // Permission is not granted. Request the permission.
                         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
@@ -318,8 +314,6 @@
         }
 
         private void setStatus(String s) {
-
-            // Change the button text to "Connecting..."
             setConnectButtonState(chatController.getState());
             status.setText(s);
         }
@@ -329,7 +323,6 @@
 
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S && checkPermission(android.Manifest.permission.BLUETOOTH_SCAN)) {
                 // Permission is granted. Start scanning for Bluetooth devices.
-                // You can start scanning here.
             } else {
                 // Permission is not granted. Request the permission.
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
@@ -415,7 +408,6 @@
 
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S && checkPermission(android.Manifest.permission.BLUETOOTH_CONNECT)) {
                 // Permission is granted. Start scanning for Bluetooth devices.
-                // You can start scanning here.
 
             } else {
                 // Permission is not granted. Request the permission.
@@ -463,16 +455,16 @@
             public void onReceive(Context context, Intent intent) {
                 String action = intent.getAction();
 
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S && checkPermission(android.Manifest.permission.BLUETOOTH_CONNECT)) {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S && checkPermission(android.Manifest.permission.BLUETOOTH_CONNECT) &&
+                checkPermission(Manifest.permission.BLUETOOTH_SCAN)) {
                     // Permission is granted. Start scanning for Bluetooth devices.
-                    // You can start scanning here.
                 } else {
                     // Permission is not granted. Request the permission.
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
                         requestPermission(Manifest.permission.BLUETOOTH_CONNECT, REQUEST_CODE_BLUETOOTH);
+                        requestPermission(Manifest.permission.BLUETOOTH_SCAN, REQUEST_CODE_BLUETOOTH);
                     }
                 }
-
 
                 if (BluetoothDevice.ACTION_FOUND.equals(action)) {
                     BluetoothDevice device = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
@@ -512,10 +504,8 @@
             if (requestCode == REQUEST_CODE_BLUETOOTH) {
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     // The user has granted the permission.
-                    // Start scanning for Bluetooth devices.
                 } else {
                     // The user has denied the permission.
-                    // Display an error message or take necessary actions.
                 }
             }
         }

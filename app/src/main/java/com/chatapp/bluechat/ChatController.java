@@ -16,22 +16,15 @@
 
 package com.chatapp.bluechat;
 
-import android.app.Service;
+import android.annotation.SuppressLint;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothServerSocket;
 import android.bluetooth.BluetoothSocket;
 import android.content.Context;
-import android.content.pm.PackageManager;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.RequiresApi;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -41,12 +34,9 @@ import java.util.UUID;
 public class ChatController{
 
     private static final String APP_NAME = "BlueChat";
-    private static final UUID MY_UUID = UUID.fromString("8ce255c0-200a-11e0-ac64-0800200c9a66");
-
-
+//   private static final UUID MY_UUID = UUID.fromString("8ce255c0-200a-11e0-ac64-0800200c9a66");
+    private static final UUID MY_UUID = UUID.fromString("92e77d03-b5b4-40ed-b5d6-4c2de3ba5089");
     private final BluetoothAdapter bluetoothAdapter;
-
-
     private final Handler handler;
     private AcceptThread acceptThread;
     private ConnectThread connectThread;
@@ -153,6 +143,7 @@ public class ChatController{
         msg.setData(bundle);
         handler.sendMessage(msg);
 
+        //update the state
         setState(STATE_CONNECTED);
     }
 
@@ -207,7 +198,12 @@ public class ChatController{
     }
 
     private void connectionFailed() {
+        // Obtain a new Message instance ,
+        // with message type MainActivity.MESSAGE_TOAST
+
         Message msg = handler.obtainMessage(MainActivity.MESSAGE_TOAST);
+
+        // Create a bundle to pass a string message to display in a toast
         Bundle bundle = new Bundle();
         bundle.putString("toast", "Unable to connect device");
         msg.setData(bundle);
@@ -232,9 +228,11 @@ public class ChatController{
     private class AcceptThread extends Thread {
         private final BluetoothServerSocket serverSocket;
 
+        @SuppressLint("MissingPermission")
         public AcceptThread() {
             BluetoothServerSocket tmp = null;
             try {
+                // Attempt to listen for incoming Bluetooth connections using service record identified by APP_NAME and MY_UUID.
                 tmp = bluetoothAdapter.listenUsingInsecureRfcommWithServiceRecord(APP_NAME, MY_UUID);
             } catch (IOException ex) {
                 ex.printStackTrace();
@@ -244,7 +242,11 @@ public class ChatController{
 
         public void run() {
             setName("AcceptThread");
+
+
+            // Represents a bidirectional communication channel between two Bluetooth devices, one serving as the client and the other as the server.
             BluetoothSocket socket;
+            
             while (state != STATE_CONNECTED) {
                 try {
                     socket = serverSocket.accept();
@@ -284,11 +286,14 @@ public class ChatController{
         }
     }
 
+    //encapsulates the logic for connecting to a Bluetooth device using a BluetoothSocket
     // runs while attempting to make an outgoing connection
     private class ConnectThread extends Thread {
         private final BluetoothSocket socket;
         private final BluetoothDevice device;
 
+        //constructor of Connect thread
+        @SuppressLint("MissingPermission")
         public ConnectThread(BluetoothDevice device) {
             this.device = device;
             BluetoothSocket tmp = null;
@@ -300,6 +305,7 @@ public class ChatController{
             socket = tmp;
         }
 
+        @SuppressLint("MissingPermission")
         public void run() {
             setName("ConnectThread");
 
@@ -338,15 +344,21 @@ public class ChatController{
     // runs during a connection with a remote device
     private class ReadWriteThread extends Thread {
         private final BluetoothSocket bluetoothSocket;
+
+        //used to receive data from connected devices
         private final InputStream inputStream;
+
+        //used to send data to the connected Bluetooth device.
         private final OutputStream outputStream;
 
         public ReadWriteThread(BluetoothSocket socket) {
             this.bluetoothSocket = socket;
+
             InputStream tmpIn = null;
             OutputStream tmpOut = null;
 
             try {
+                //temporary variables used to store input/output stream obtained from the socket
                 tmpIn = socket.getInputStream();
                 tmpOut = socket.getOutputStream();
             } catch (IOException e) {
@@ -357,6 +369,9 @@ public class ChatController{
         }
 
         public void run() {
+
+            //declares a byte array named buffer with a length of 1024 bytes.
+            //buffer used to store data temporarily while it is being transferred between different components
             byte[] buffer = new byte[1024];
             int bytes;
 
@@ -390,16 +405,13 @@ public class ChatController{
 
         public void cancel() {
             try {
+                //cancels bluetooth Socket connection
                 bluetoothSocket.close();
             } catch (IOException e) {
                 e.printStackTrace();
             }
         }
     }
-
-
-
-
 
 
 }
